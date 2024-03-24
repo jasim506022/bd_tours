@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "143037880205",
+    "project_id": "bd-tour-f37b7",
+    "storage_bucket": "bd-tour-f37b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143037880205:android:59522a7b518482b0eb0fc4",
+        "android_client_info": {
+          "package_name": "com.example.bd_tour_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA60nrbMqbU_I0F2AGik2biGhuG7hiXUvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
