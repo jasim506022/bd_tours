@@ -27,7 +27,7 @@ class EmailVerifyCheckAlertDialogWidget extends StatelessWidget {
             width: 100,
           ),
           Text(
-            "Email Verification Required",
+            "Email Hello Verification Required",
             style: GoogleFonts.poppins(
               color: Colors.black,
               fontWeight: FontWeight.bold,
