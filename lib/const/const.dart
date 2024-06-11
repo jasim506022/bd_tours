@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'globalmethod.dart';
 
 GlobalMethod globalMethod = GlobalMethod();
+
 late Size mq;
 
 List<String> travelCategories = [
@@ -13,3 +14,5 @@ List<String> travelCategories = [
   "River",
   "Other"
 ];
+
+enum Gender { male, female, other }

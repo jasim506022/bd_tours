@@ -20,7 +20,7 @@ class ShowErrorDialogWidget extends StatelessWidget {
         children: [
           Flexible(
             child: Text(
-              "$title Error",
+              title,
               style: GoogleFonts.poppins(
                   color: AppColors.black,
                   fontStyle: FontStyle.italic,

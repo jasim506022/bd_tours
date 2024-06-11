@@ -7,8 +7,10 @@ class AppColors {
 // Brands Color
 // Primary Color
   static Color blueColor = const Color(0xff4600a1);
+
 // Primary Color
   static Color secondaryColor = const Color(0xff1d1d1d);
+
 // State Colors
   static Color lightBlack = const Color(0xff999999);
 
@@ -23,4 +25,6 @@ class AppColors {
   static Color grey = Colors.grey;
   static Color deepGreen = const Color.fromARGB(255, 0, 108, 57);
   static Color cardColor = const Color(0xff393e4b);
+  static Color hintTextColor = const Color(0xffc8c8d5);
 }
+

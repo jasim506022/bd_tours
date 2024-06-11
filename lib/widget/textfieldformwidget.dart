@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../const/const.dart';
 import '../const/gobalcolor.dart';
 
 class TextFieldFormWidget extends StatefulWidget {
@@ -16,7 +15,8 @@ class TextFieldFormWidget extends StatefulWidget {
       this.textInputAction = TextInputAction.next,
       this.maxLines = 1,
       this.textInputType = TextInputType.text,
-      required this.validator});
+      required this.validator, this.icon});
+
   final String hintText;
   final TextEditingController controller;
   final bool? autofocus;
@@ -26,6 +26,8 @@ class TextFieldFormWidget extends StatefulWidget {
   final bool enable;
   bool? obscureText;
   final bool? isShowPassword;
+  final String? icon;
+
   final String? Function(String?)? validator;
 
   @override
@@ -36,7 +38,7 @@ class _TextFieldFormWidgetState extends State<TextFieldFormWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: mq.height * .012),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: TextFormField(
             controller: widget.controller,
             autofocus: widget.autofocus!,
@@ -69,6 +71,14 @@ class _TextFieldFormWidgetState extends State<TextFieldFormWidget> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.all(4),
+                child: SvgPicture.asset(
+                 widget.icon??"asset/svg/email1.svg",
+                  height: 35,
+                  width: 35,
+                ),
+              ),
               suffixIcon: widget.isShowPassword!
                   ? IconButton(
                       onPressed: () {
@@ -82,10 +92,10 @@ class _TextFieldFormWidgetState extends State<TextFieldFormWidget> {
                             : AppColors.red,
                       ))
                   : null,
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: mq.width * .033, vertical: mq.height * .025),
-              hintStyle: const TextStyle(
-                color: Color(0xffc8c8d5),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              hintStyle: TextStyle(
+                color: AppColors.hintTextColor,
               ),
             )));
   }

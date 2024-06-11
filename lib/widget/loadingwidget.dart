@@ -3,7 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class LoadingWidget extends StatelessWidget {
   const LoadingWidget({super.key, required this.message});
+
   final String message;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -21,8 +23,9 @@ class LoadingWidget extends StatelessWidget {
           Text(
             "$message \n Pleasing Waiting........",
             style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
               color: Colors.black,
-              fontSize: 20,
+              fontSize: 18,
             ),
           )
         ],
