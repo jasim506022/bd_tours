@@ -40,6 +40,8 @@ class GlobalMethod {
         fontSize: 16.0);
   }
 
+
+
   // Build Tab
   Tab buildTab({required String title}) {
     return Tab(
@@ -286,7 +288,7 @@ class GlobalMethod {
   }
 
   // Rich Text
-  RichText buldRichText(
+  RichText buildRichText(
       {required BuildContext context,
       required String simpleText,
       required String colorText,

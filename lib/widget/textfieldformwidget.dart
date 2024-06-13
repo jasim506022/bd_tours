@@ -40,6 +40,7 @@ class _TextFieldFormWidgetState extends State<TextFieldFormWidget> {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: TextFormField(
+
             controller: widget.controller,
             autofocus: widget.autofocus!,
             maxLines: widget.maxLines,

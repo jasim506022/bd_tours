@@ -1,17 +1,17 @@
-import 'package:connectivity/connectivity.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 import '../../const/const.dart';
 import '../../const/gobalcolor.dart';
 import '../../model/profilemodel.dart';
+import '../../res/assets/animation_assets.dart';
 import '../../res/routes/routes_name.dart';
-import '../../service/database/firebase_database_provider.dart';
+
+import '../../view_model/controller/SelectGenderController.dart';
 import '../../view_model/controller/loading_controller.dart';
-import '../../widget/loadingwidget.dart';
+import '../../view_model/controller/registration_controller.dart';
+import '../../widget/custom_button_widget.dart';
+
 import '../../widget/textfieldformwidget.dart';
 import '../../widget/textform_title_widget.dart';
 import 'widget/app_icon_widget.dart';
@@ -26,6 +26,8 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final loadingController = Get.put(LoadingController());
+  final selectGenderController = Get.put(SelectGenderController());
+  final registrationController = Get.put(RegistrationController());
 
   // Text Editing Controller
   final TextEditingController _phoneController = TextEditingController();
@@ -37,22 +39,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   // google Form Key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  String genderToString(Gender gender) {
-    switch (gender) {
-      case Gender.male:
-        return "Male";
-
-      case Gender.female:
-        return "Female";
-      case Gender.other:
-        return "Other";
-    }
-  }
-
-  Gender _selectGender = Gender.male;
-
-  UserCredential? userCredential;
 
   @override
   void dispose() {
@@ -84,147 +70,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextFormTitleWidget(
-                          textFieldWidget: TextFieldFormWidget(
-                            hintText: 'Your Name',
-                            controller: _nameController,
-                            validator: (value) => value!.isEmpty
-                                ? 'Please enter your name'
-                                : null,
-                          ),
-                          title: 'Name',
-                        ),
-                        TextFormTitleWidget(
-                            title: "Email",
-                            textFieldWidget: TextFieldFormWidget(
-                              hintText: 'Email Address',
-                              controller: _emailController,
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your Email Address';
-                                } else if (globalMethod.isValidEmail(value) ==
-                                    false) {
-                                  return 'Please Enter a Valid Email Address';
-                                }
-                                return null;
-                              },
-                              textInputType: TextInputType.emailAddress,
-                            )),
-                        TextFormTitleWidget(
-                          title: "Phone",
-                          textFieldWidget: TextFieldFormWidget(
-                            hintText: 'Phone Number',
-                            controller: _phoneController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your Email Address';
-                              } else if (!(value.length == 11)) {
-                                return 'Phone Number Must Be 11 Digit';
-                              }
-                              return null;
-                            },
-                            textInputType: TextInputType.phone,
-                          ),
-                        ),
-                        TextFormTitleWidget(
-                            title: "Password",
-                            textFieldWidget: TextFieldFormWidget(
-                              obscureText: true,
-                              isShowPassword: true,
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your Password';
-                                } else if (value.length < 6) {
-                                  return "Password Must be 6 Character";
-                                }
-                                return null;
-                              },
-                              hintText: "Password",
-                              controller: _passwordController,
-                            )),
-                        TextFormTitleWidget(
-                          title: "Confirm Password",
-                          textFieldWidget: TextFieldFormWidget(
-                            obscureText: true,
-                            isShowPassword: true,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your Confirm Password';
-                              } else if (value.length < 6) {
-                                return "Password Must be 6 Character";
-                              }
-                              return null;
-                            },
-                            hintText: "Confirm Password",
-                            controller: _confirmpasswordController,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Gender",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            // understand this code
-                            ...Gender.values.map((gender) => Row(
-                                  children: [
-                                    Radio<Gender>(
-                                      value: gender,
-                                      groupValue: _selectGender,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _selectGender = value!;
-                                        });
-                                      },
-                                    ),
-                                    Text(
-                                      genderToString(gender),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildRegistrationForm(),
                   SizedBox(
                     height: mq.height * .018,
                   ),
-                  Obx(
-                    () {
-                      return _buildSignUpButton(loadingController);
-                    },
-                  ),
+                  _buildRegistrationButton(),
                   SizedBox(
                     height: mq.height * .03,
                   ),
-                  globalMethod.buldRichText(
+                  globalMethod.buildRichText(
                       context: context,
                       simpleText: "Already Create An Account? ",
                       colorText: "Sign In",
                       function: () {
-                        // Navigator.pushReplacementNamed(
-                        //     context, AppRouters.loginPage);
-
                         Get.offNamed(RoutesName.loginPage);
                       }),
                   SizedBox(
@@ -237,111 +95,175 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget _buildSignUpButton(
-    LoadingController loadingProvider,
-  ) {
-    return SizedBox(
-      width: mq.width,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.greenColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+  Form _buildRegistrationForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormTitleWidget(
+            textFieldWidget: TextFieldFormWidget(
+              icon: "asset/svg/person.svg",
+              hintText: 'enter_your_full_name'.tr,
+              controller: _nameController,
+              validator: (value) =>
+                  value!.isEmpty ? 'enter_your_full_name'.tr : null,
+            ),
+            title: 'name'.tr,
           ),
-          padding: EdgeInsets.symmetric(
-              horizontal: mq.width * 0.022, vertical: mq.height * 0.018),
-        ),
-        onPressed: () async {
-          if (!_formKey.currentState!.validate()) return;
+          TextFormTitleWidget(
+              title: "email".tr,
+              textFieldWidget: TextFieldFormWidget(
+                icon: "asset/svg/person.svg",
+                hintText: 'enter_email_address'.tr,
+                controller: _emailController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'please_enter_your_email_address'.tr;
+                  } else if (globalMethod.isValidEmail(value) == false) {
+                    return 'please_enter_a_valid_email_address'.tr;
+                  }
+                  return null;
+                },
+                textInputType: TextInputType.emailAddress,
+              )),
+          TextFormTitleWidget(
+            title: "phone".tr,
+            textFieldWidget: TextFieldFormWidget(
+              hintText: 'enter_phone_number'.tr,
+              controller: _phoneController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'enter_your_phone_number'.tr;
+                } else if (!(value.length == 11)) {
+                  return 'enter_your_digit_number'.tr;
+                }
+                return null;
+              },
+              textInputType: TextInputType.phone,
+            ),
+          ),
+          TextFormTitleWidget(
+              title: "password".tr,
+              textFieldWidget: TextFieldFormWidget(
+                obscureText: true,
+                isShowPassword: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'please_enter_your_password'.tr;
+                  } else if (value.length < 6) {
+                    return "password_should_be_alphanumeric".tr;
+                  }
+                  return null;
+                },
+                hintText: "enter_email_password".tr,
+                controller: _passwordController,
+              )),
+          TextFormTitleWidget(
+            title: "confirm_password".tr,
+            textFieldWidget: TextFieldFormWidget(
+              obscureText: true,
+              isShowPassword: true,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'please_enter_confirm_password'.tr;
+                } else if (value.length < 6) {
+                  return "password_should_be_alphanumeric".tr;
+                }
+                return null;
+              },
+              hintText: "enter_confirm_password".tr,
+              controller: _confirmpasswordController,
+            ),
+          ),
+          // Understand Row Mail
+          Row(
+            children: [
+              Text(
+                "gender".tr,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.black,
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              // understand this code
+              ...Gender.values.map((gender) => Row(
+                    children: [
+                      Obx(
+                        () => Radio<Gender>(
+                          value: gender,
+                          groupValue: selectGenderController.selectGender.value,
+                          onChanged: (genderValue) {
+                            selectGenderController.setGender(genderValue!);
+                          },
+                        ),
+                      ),
+                      Text(
+                        selectGenderController.genderToString(gender),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ],
+                  )),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
+    );
+  }
 
-          if (_passwordController.text.trim() !=
-              _confirmpasswordController.text.trim()) {
-            globalMethod.showErrorDialog(
-                context,
-                "The password and confirm password fields do not match. Please ensure both fields contain the same password.",
-                "Password Mismatch");
-            return;
-          }
+  Widget _buildRegistrationButton() {
+    return SizedBox(
+        width: mq.width,
+        child: CustomButtonWidget(
+          onPressed: () async {
+            if (!_formKey.currentState!.validate()) return;
+            if (_passwordController.text.trim() !=
+                _confirmpasswordController.text.trim()) {
+              globalMethod.errorDialog(
+                animationAssets: AnimationAssets.noInternetAnimation,
+                title: "Password Mismatch",
+                content:
+                    "The password and confirm password fields do not match. Please ensure both fields contain the same password.",
+              );
 
-          showDialog(
-            context: context,
-            builder: (context) {
-              return const LoadingWidget(message: "Registration......");
-            },
-          );
-
-          loadingProvider.setLoading( true);
-
-          // Check Internet Connection
-          var connectivityResult = await (Connectivity().checkConnectivity());
-          if (connectivityResult == ConnectivityResult.none) {
-            globalMethod.flutterToast(msg: "No Internet Connection");
-            loadingProvider.setLoading( false);
-            if (mounted) {
-              Navigator.pop(context);
+              return;
             }
-          }
+            bool isCheckInternet = await globalMethod.internetChecking();
 
-          try {
-            // Create A new user on Firebase
-            await FirebaseServiceProvider.createUserWithEmilandPasswordSnaphsot(
-                    email: _emailController.text.trim(),
-                    password: _passwordController.text.trim())
-                .then((userCredential) {
-              loadingProvider.setLoading( false);
-
+            if (isCheckInternet) {
+              loadingController.setLoading(false);
+              globalMethod.errorDialog(
+                animationAssets: AnimationAssets.noInternetAnimation,
+                title: "no_internet".tr,
+                content: "no_internet_message".tr,
+                buttonText: "try_again".tr,
+              );
+            } else {
               ProfileModel profileModel = ProfileModel(
                 name: _nameController.text,
-                gender: _selectGender.name,
+                gender: selectGenderController.selectGender.value.name,
                 status: "not_approved",
                 email: _emailController.text,
                 phone: _phoneController.text,
-                uid: userCredential.user!.uid,
               );
-
-              // Upload new user data on Firebase firestore
-              FirebaseServiceProvider.uploadUserInformationFirebaseDatabase(
-                  profileModel: profileModel);
-
-              globalMethod.flutterToast(msg: "Successfully Register");
-
-              // Navigator.pushReplacementNamed(
-              //     context, AppRouters.userVerifyPage,
-              //     arguments: userCredential);
-
-              Get.offNamed(RoutesName.userVerifyPage);
-            });
-          } on FirebaseAuthException catch (e) {
-            if (mounted) {
-              print(e.toString());
-              globalMethod.handleError(context, e, loadingProvider);
+              await registrationController
+                  .createUserWithEmilandPasswordSnaphsot(
+                      email: _emailController.text,
+                      password: _emailController.text,
+                      profileModel: profileModel);
             }
-          } catch (e) {
-            if (mounted) {
-              Navigator.pop(context);
-              globalMethod.showErrorDialog(
-                  context, e.toString(), 'Error Occurred');
-            }
-
-            loadingProvider.setLoading( false);
-          } finally {
-            loadingProvider.setLoading( false);
-          }
-        },
-        child: loadingProvider.isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: AppColors.white,
-                ),
-              )
-            : Text(
-                "Sign Up",
-                style: GoogleFonts.poppins(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14),
-              ),
-      ),
-    );
+          },
+          buttonText: 'Registration',
+        ));
   }
 }

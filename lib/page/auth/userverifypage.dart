@@ -2,9 +2,130 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../const/const.dart';
+import '../../const/gobalcolor.dart';
+import '../../res/routes/routes_name.dart';
+import '../../service/database/firebase_database_provider.dart';
+import '../../view_model/controller/verify_page_controller.dart';
+
+/// Widget for handling user email verification.
+class UserVerifyPage extends StatelessWidget {
+  const UserVerifyPage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final VerifyPageController controller = Get.put(VerifyPageController());
+    return PopScope(
+      onPopInvoked: (didPop) {
+        Get.offNamed(RoutesName.loginPage);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+            "Verify Email",
+            style: GoogleFonts.stixTwoText(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                    "A Verification Mail has been sent to your email for email verification",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(
+                  height: 80,
+                ),
+                SizedBox(
+                  width: mq.width,
+
+                  // Use reSend Email
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.greenColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: mq.width * 0.022,
+                          vertical: mq.height * 0.018),
+                    ),
+                    icon: Icon(Icons.email, size: 32, color: AppColors.white),
+                    label: Text("Resent Email",
+                        style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      if (controller.canResendEmail.value) {
+                        controller.sendVerificationEmail();
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: mq.width,
+                  // Use
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: BorderSide(
+                              color: AppColors.greenColor, width: 2)),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: mq.width * 0.022,
+                          vertical: mq.height * 0.018),
+                    ),
+                    child: Text("Cancel",
+                        style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut().then((value) {
+                        controller.cancel();
+                      });
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../const/const.dart';
 import '../../const/gobalcolor.dart';
@@ -15,7 +136,6 @@ import '../../service/database/firebase_database_provider.dart';
 class UserVerifyPage extends StatefulWidget {
   const UserVerifyPage({
     super.key,
-
   });
 
   @override
@@ -23,6 +143,7 @@ class UserVerifyPage extends StatefulWidget {
 }
 
 class _UserVerifyPageState extends State<UserVerifyPage> {
+
   bool _isEmailVerified = false;
   bool _canResendEmail = false;
 
@@ -32,11 +153,11 @@ class _UserVerifyPageState extends State<UserVerifyPage> {
 
   @override
   void initState() {
+
     _timer = Timer.periodic(const Duration(seconds: 4), (_) {
       setState(() {
         _checkEmailVerification();
         if (_isEmailVerified) {
-          // Navigator.pushReplacementNamed(context, AppRouters.loginPage);
           Get.offNamed(RoutesName.loginPage);
         }
       });
@@ -48,8 +169,8 @@ class _UserVerifyPageState extends State<UserVerifyPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _userCredential =
-    Get.arguments as UserCredential;
+    _userCredential = Get.arguments as UserCredential;
+
     if (FirebaseAuth.instance.currentUser != null) {
       _isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
       if (!_isEmailVerified) {
@@ -80,10 +201,8 @@ class _UserVerifyPageState extends State<UserVerifyPage> {
     await FirebaseAuth.instance.currentUser!.reload();
     if (mounted) {
       setState(() =>
-      _isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified);
+          _isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified);
     }
-
-
     if (_isEmailVerified) {
       _uploadData();
       _timer.cancel();
@@ -92,7 +211,6 @@ class _UserVerifyPageState extends State<UserVerifyPage> {
         // Navigator.pushReplacementNamed(context, AppRouters.loginPage);
         Get.offNamed(RoutesName.loginPage);
       }
-
     }
   }
 
@@ -203,3 +321,5 @@ class _UserVerifyPageState extends State<UserVerifyPage> {
     );
   }
 }
+
+ */

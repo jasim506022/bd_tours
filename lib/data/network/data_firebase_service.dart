@@ -16,7 +16,6 @@ class DataFirebaseService implements BaseFirebaseService {
   // TODO: implement firestore
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
 
-
   //Sign in With Email and Passwords
   @override
   Future<UserCredential> signInEmailandPasswordSnapshot(
@@ -36,10 +35,9 @@ class DataFirebaseService implements BaseFirebaseService {
   // Sign In With Gmail
   @override
   Future<UserCredential?> signWithGoogle() async {
-
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth =
-    await googleUser?.authentication;
+        await googleUser?.authentication;
 
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
@@ -101,8 +99,6 @@ class DataFirebaseService implements BaseFirebaseService {
         .set(profileModel.toMap());
   }
 
-
-
   @override
   Future<bool> isEmailExist({required String email}) async {
     var querySnapshot = await firestore
@@ -117,11 +113,30 @@ class DataFirebaseService implements BaseFirebaseService {
     return await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
+  @override
+  Future<void> sendVerificationEmail(User user) async {
+    await user.sendEmailVerification();
+  }
 
+  @override
+  Future<void> reloadUser() async {
+    await auth.currentUser!.reload();
+  }
 
+  @override
+  User? currentUser() => auth.currentUser;
 
+  @override
+  Future<void> signOut() async {
+    await auth.signOut();
+  }
 
-
-
-
+  @override
+  Future<void> uploadUserData(
+      UserCredential userCredential, bool isEmailVerified) async {
+    await createUserByEmailPassword(
+      status: isEmailVerified ? "approved" : "not_approved",
+      userCredential: userCredential,
+    );
+  }
 }

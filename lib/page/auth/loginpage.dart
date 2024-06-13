@@ -44,6 +44,8 @@ class _LogInPageState extends State<LogInPage> with TickerProviderStateMixin {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+
+
   // Global Key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -51,6 +53,7 @@ class _LogInPageState extends State<LogInPage> with TickerProviderStateMixin {
   void dispose() {
     _passwordController.dispose();
     _emailController.dispose();
+
     super.dispose();
   }
 
@@ -185,7 +188,7 @@ class _LogInPageState extends State<LogInPage> with TickerProviderStateMixin {
             loginViewModel.performLoginAction(
                 _emailController.text, _passwordController.text);
           }
-        },
+        }, buttonText: 'Log In',
       ),
     );
   }
@@ -296,11 +299,14 @@ class _LogInPageState extends State<LogInPage> with TickerProviderStateMixin {
 
   SizedBox _buildCreateAccount(BuildContext context) {
     return SizedBox(
-      child: globalMethod.buldRichText(
+      child: globalMethod.buildRichText(
         colorText: "create_account".tr,
         context: context,
         function: () {
           Get.toNamed(RoutesName.registrationPage);
+          _passwordController.clear();
+          _emailController.clear();
+
         },
         simpleText: "do_have_account?".tr,
       ),

@@ -108,7 +108,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 ),
               ),
               const SizedBox(height: 15),
-              globalMethod.buldRichText(
+              globalMethod.buildRichText(
                 colorText: "Create Account",
                 context: context,
                 function: () {

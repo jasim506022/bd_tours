@@ -10,7 +10,7 @@ abstract class BaseFirebaseService {
 
   //Sign in With Email and Passwords
   Future<UserCredential> signInEmailandPasswordSnapshot(
-      {required String email, required String password}) ;
+      {required String email, required String password});
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDocumentById(
       {required String uid});
@@ -19,7 +19,7 @@ abstract class BaseFirebaseService {
   Future<UserCredential?> signWithGoogle();
 
   // user is Exist on Database
-  Future<bool> userExists() ;
+  Future<bool> userExists();
 
   // Create User and Post Data Firebase
   Future<void> createUserGmail(User user);
@@ -32,23 +32,23 @@ abstract class BaseFirebaseService {
   Future<void> uploadUserInformationFirebaseDatabase(
       {required ProfileModel profileModel});
 
-
-
   Future<bool> isEmailExist({required String email});
 
   Future<void> sendPasswordResetEmail({required String email});
 
-
-
   // Create User and Post Data Firebase
-   Future<void> createUserByEmailPassword(
-      {required UserCredential userCredential, String? status = "not_approved"
-      });
+  Future<void> createUserByEmailPassword(
+      {required UserCredential userCredential,
+      String? status = "not_approved"});
 
+  Future<void> sendVerificationEmail(User user);
 
+  Future<void> reloadUser();
 
+  User? currentUser();
 
+  Future<void> signOut();
 
-
-
+  Future<void> uploadUserData(
+      UserCredential userCredential, bool isEmailVerified);
 }
