@@ -1,8 +1,6 @@
 import 'package:bd_tour_firebase/const/gobalcolor.dart';
-import 'package:bd_tour_firebase/page/auth/loginpage.dart';
 import 'package:bd_tour_firebase/page/home/homepage.dart';
 import 'package:bd_tour_firebase/work/data/app_exception.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:get/get.dart';

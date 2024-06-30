@@ -8,7 +8,6 @@ import 'reviewmode.dart';
 class TourModel with ChangeNotifier {
   String? name;
   String? address;
-
   String? details;
   double? price;
   double? ratting;

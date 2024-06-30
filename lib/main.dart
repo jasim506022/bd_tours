@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
     mq = MediaQuery.of(context).size;
     return GetMaterialApp(
         translations: Languages(),
-        locale: Locale("en", "US"),
-        fallbackLocale: Locale("en", "US"),
+        locale: const Locale("en", "US"),
+        fallbackLocale: const Locale("en", "US"),
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             primaryColor: AppColors.black,
