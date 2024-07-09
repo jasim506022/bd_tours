@@ -8,6 +8,8 @@ import 'package:bd_tour_firebase/page/splash/splashpage.dart';
 import 'package:bd_tour_firebase/res/routes/routes_name.dart';
 import 'package:get/get.dart';
 
+import '../../page/edit_profile_page.dart';
+
 class AppRoutes {
   static appRoutes() => [
         GetPage(
@@ -38,5 +40,10 @@ class AppRoutes {
           name: RoutesName.homepage,
           page: () => const HomePage(),
         ),
+
+    GetPage(
+      name: RoutesName.editProfilePage,
+      page: () => const EditProfilePage(),
+    ),
       ];
 }

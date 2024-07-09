@@ -1,8 +1,8 @@
-import 'package:bd_tour_firebase/model/profilemodel.dart';
 import 'package:get/get.dart';
 
 import '../../const/const.dart';
 import '../../data/response/app_exception.dart';
+import '../../model/profile_model.dart';
 import '../../repository/registration_repository.dart';
 import '../../res/assets/animation_assets.dart';
 import '../../res/routes/routes_name.dart';
@@ -29,7 +29,8 @@ class RegistrationController extends GetxController {
             profileModel: profileModel);
         loadingController.setLoading(false);
         print(userCredential);
-        Get.offNamed(RoutesName.userVerifyPage, arguments: userCredential);
+        // Get.offNamed(RoutesName.userVerifyPage, arguments: userCredential);
+        Get.offAll(RoutesName.loginPage);
         globalMethod.flutterToast(msg: "Sign in Successfully");
       }
     } on FirebaseAuthExceptions catch (e) {

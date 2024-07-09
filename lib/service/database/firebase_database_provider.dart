@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../model/profilemodel.dart';
+import '../../model/profile_model.dart';
+
 
 
 class FirebaseServiceProvider {

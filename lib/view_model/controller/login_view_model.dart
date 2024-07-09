@@ -22,6 +22,7 @@ class LoginController extends GetxController {
       UserCredential userCredential = await _loginRepository
           .signInEmailandPasswordSnapshot(email: email, password: password);
 
+    /*
       DocumentSnapshot<Map<String, dynamic>> userDocumentSnapshot =
           await _loginRepository.getUserDocumentById(
               uid: userCredential.user!.uid);
@@ -30,15 +31,26 @@ class LoginController extends GetxController {
               userDocumentSnapshot.data()?["status"] == "approved") ||
           userCredential.user!.emailVerified;
 
+
+     */
+
+      Get.offNamed(RoutesName.mainPage);
+      globalMethod.flutterToast(msg: "Sign in Successfully");
+      /*
       if (checkEmailVerify) {
         Get.offNamed(RoutesName.mainPage);
         globalMethod.flutterToast(msg: "Sign in Successfully");
-      } else {
+      }
+
+      else {
         loadingController.setLoading(false);
         globalMethod.emailVerifyCheckAlert(
             userCredential: userCredential,
             animationAssets: "asset/lottie/unverified.json");
       }
+
+       */
+
     } on FirebaseAuthExceptions catch (e) {
       loadingController.setLoading(false);
       globalMethod.errorDialog(
@@ -77,12 +89,10 @@ class LoginController extends GetxController {
           globalMethod.flutterToast(msg: "Sign in Successfully");
         } else {
           Get.back();
-          await _loginRepository
-              .createUserGmail(userCredentialGmail.user!)
-              .then((value) {
-            Get.offNamed(RoutesName.mainPage);
-            globalMethod.flutterToast(msg: "Sign in Successfully");
-          });
+          await _loginRepository.createUserGmail(userCredentialGmail.user!);
+
+          Get.offNamed(RoutesName.mainPage);
+          globalMethod.flutterToast(msg: "Sign in Successfully");
         }
       }
     } on FirebaseAuthExceptions catch (e) {

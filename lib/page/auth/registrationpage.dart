@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../const/const.dart';
 import '../../const/gobalcolor.dart';
-import '../../model/profilemodel.dart';
+import '../../model/profile_model.dart';
 import '../../res/assets/animation_assets.dart';
 import '../../res/routes/routes_name.dart';
 

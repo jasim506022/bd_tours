@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:bd_tour_firebase/data/network/base_firebase_service.dart';
-import 'package:bd_tour_firebase/data/response/app_exception.dart';
-import 'package:bd_tour_firebase/model/profilemodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../model/profile_model.dart';
 
 class DataFirebaseService implements BaseFirebaseService {
   @override
@@ -15,6 +16,10 @@ class DataFirebaseService implements BaseFirebaseService {
   @override
   // TODO: implement firestore
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
+
+  @override
+  // TODO: implement storageReference
+  Reference get storageReference => FirebaseStorage.instance.ref();
 
   //Sign in With Email and Passwords
   @override
@@ -138,5 +143,39 @@ class DataFirebaseService implements BaseFirebaseService {
       status: isEmailVerified ? "approved" : "not_approved",
       userCredential: userCredential,
     );
+  }
+
+  @override
+  Future<DocumentSnapshot<Map<String, dynamic>>>
+      getCurrentUserDocumentSnapshot() {
+    return FirebaseFirestore.instance
+        .collection("user")
+        .doc(auth.currentUser!.uid)
+        .get();
+  }
+
+  @override
+  Future<String> imageUploadedUrl({required String path}) async {
+    final date = DateTime.now();
+    final imagesRef = storageReference
+        .child("image")
+        .child(auth.currentUser!.uid)
+        .child("profileImage")
+        .child(
+            "${date.day}-${date.month}-${date.year}/${date.millisecondsSinceEpoch}");
+    UploadTask uploadTask = imagesRef.putFile(File(path));
+    var taskSnapshot = await uploadTask.whenComplete(
+      () {},
+    );
+    return taskSnapshot.ref.getDownloadURL();
+  }
+
+  @override
+  Future<void> uploadEditProfileSnapshot(
+      {required ProfileModel profileModel}) async {
+    await firestore
+        .collection("user")
+        .doc(auth.currentUser!.uid)
+        .update(profileModel.toMap(isModify: true));
   }
 }

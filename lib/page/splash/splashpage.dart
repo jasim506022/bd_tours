@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bd_tour_firebase/res/routes/routes_name.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -31,9 +32,14 @@ class _SplashPageState extends State<SplashPage> {
       () {
         // Navigate to the login page after 3 seconds
         // Navigator.pushReplacementNamed(context, AppRouters.loginPage);
-        Get.offNamed(RoutesName.loginPage);
+        FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+        var user = firebaseAuth.currentUser;
+        if (user != null) {
+          Get.offAllNamed(RoutesName.mainPage);
+        } else {
+          Get.offNamed(RoutesName.loginPage);
+        }
       },
-
     );
   }
 

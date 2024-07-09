@@ -19,4 +19,16 @@ class SelectGenderController extends GetxController {
         return "other".tr;
     }
   }
+
+  Gender? stringToGender(String gender) {
+    switch (gender) {
+      case "male":
+        return Gender.male;
+      case "female":
+        return Gender.female;
+      case "other":
+        return Gender.other;
+    }
+    return null;
+  }
 }

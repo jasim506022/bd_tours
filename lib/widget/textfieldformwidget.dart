@@ -15,7 +15,8 @@ class TextFieldFormWidget extends StatefulWidget {
       this.textInputAction = TextInputAction.next,
       this.maxLines = 1,
       this.textInputType = TextInputType.text,
-      required this.validator, this.icon});
+      required this.validator,
+      this.icon});
 
   final String hintText;
   final TextEditingController controller;
@@ -40,7 +41,6 @@ class _TextFieldFormWidgetState extends State<TextFieldFormWidget> {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: TextFormField(
-
             controller: widget.controller,
             autofocus: widget.autofocus!,
             maxLines: widget.maxLines,
@@ -72,6 +72,7 @@ class _TextFieldFormWidgetState extends State<TextFieldFormWidget> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
+              /*
               prefixIcon: Padding(
                 padding: const EdgeInsets.all(4),
                 child: SvgPicture.asset(
@@ -80,6 +81,8 @@ class _TextFieldFormWidgetState extends State<TextFieldFormWidget> {
                   width: 35,
                 ),
               ),
+
+               */
               suffixIcon: widget.isShowPassword!
                   ? IconButton(
                       onPressed: () {
@@ -94,7 +97,7 @@ class _TextFieldFormWidgetState extends State<TextFieldFormWidget> {
                       ))
                   : null,
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 18),
               hintStyle: TextStyle(
                 color: AppColors.hintTextColor,
               ),

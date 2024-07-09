@@ -1,10 +1,14 @@
 import 'package:bd_tour_firebase/const/gobalcolor.dart';
+import 'package:bd_tour_firebase/page/edit_profile_page.dart';
 import 'package:bd_tour_firebase/page/home/homepage.dart';
+import 'package:bd_tour_firebase/page/home/profilepage.dart';
 import 'package:bd_tour_firebase/work/data/app_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:get/get.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+
+
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -15,7 +19,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   var _currentIndex = 0;
-  List<Widget> list = [HomePage(), SearchPage(), Text("Whllo"), Text("Whllo")];
+  List<Widget> list = [HomePage(), SearchPage(), Text("Whllo"), ProfilePage()];
 
   @override
   Widget build(BuildContext context) {

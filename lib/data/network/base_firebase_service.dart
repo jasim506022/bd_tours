@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../model/profilemodel.dart';
+import '../../model/profile_model.dart';
 
 abstract class BaseFirebaseService {
   FirebaseAuth get auth;
 
   FirebaseFirestore get firestore;
+
+  Reference get storageReference;
 
   //Sign in With Email and Passwords
   Future<UserCredential> signInEmailandPasswordSnapshot(
@@ -51,4 +56,11 @@ abstract class BaseFirebaseService {
 
   Future<void> uploadUserData(
       UserCredential userCredential, bool isEmailVerified);
+
+  Future<DocumentSnapshot<Map<String, dynamic>>>
+      getCurrentUserDocumentSnapshot();
+
+  Future<String> imageUploadedUrl({required String path});
+
+  Future<void> uploadEditProfileSnapshot({required ProfileModel profileModel});
 }

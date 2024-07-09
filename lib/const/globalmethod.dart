@@ -1,5 +1,6 @@
 import 'package:bd_tour_firebase/view_model/controller/loading_controller.dart';
 import 'package:bd_tour_firebase/widget/custom_button_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -12,11 +13,77 @@ import 'package:lottie/lottie.dart';
 import '../page/widget/button.dart';
 import '../res/assets/animation_assets.dart';
 import '../res/routes/routes_name.dart';
+import '../view_model/controller/profile_controller.dart';
 import '../widget/show_error_dialog_widget.dart';
 import 'const.dart';
 import 'gobalcolor.dart';
 
 class GlobalMethod {
+  FutureBuilder<DocumentSnapshot<Map<String, dynamic>>> futureBuildersFunction(
+      {required ProfileController editProfileViewModel,
+      required Widget widget}) {
+    return FutureBuilder(
+        future: editProfileViewModel.getCurrentUserDocumentSnapshot(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.black,
+            ));
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) {
+                  globalMethod.errorDialog(
+                      animationAssets: AnimationAssets.noErrorAnimation,
+                      title: "Error Occurred",
+                      content: "${snapshot.error!}");
+                },
+              );
+              return Text("Error : ${snapshot.error}");
+            } else if (snapshot.hasData && snapshot.data!.exists) {
+              return widget ;
+            }
+          }
+
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.black,
+          ));
+        });
+  }
+
+  String monthName(int month) {
+    switch (month) {
+      case 1:
+        return "January";
+      case 2:
+        return "February";
+      case 3:
+        return "March";
+      case 4:
+        return "April";
+      case 5:
+        return "May";
+      case 6:
+        return "June";
+      case 7:
+        return "July";
+      case 8:
+        return "August";
+      case 9:
+        return "September";
+      case 10:
+        return "October";
+      case 11:
+        return "November";
+      case 12:
+        return "December";
+      default:
+        return "";
+    }
+  }
+
   Future<bool> internetChecking() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     return connectivityResult == ConnectivityResult.none;
@@ -40,8 +107,6 @@ class GlobalMethod {
         fontSize: 16.0);
   }
 
-
-
   // Build Tab
   Tab buildTab({required String title}) {
     return Tab(
@@ -55,7 +120,7 @@ class GlobalMethod {
     );
   }
 
-  void errorDialog(
+  errorDialog(
       {required String animationAssets,
       required String title,
       String? content,
@@ -149,7 +214,8 @@ class GlobalMethod {
               children: [
                 SimpleButtonWidget(
                   onPressed: () {
-                    Get.offNamed(RoutesName.userVerifyPage, arguments: userCredential);
+                    Get.offNamed(RoutesName.userVerifyPage,
+                        arguments: userCredential);
                   },
                   title: "continue".tr,
                   color: AppColors.greenColor,

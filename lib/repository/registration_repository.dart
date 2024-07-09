@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../data/network/data_firebase_service.dart';
 import '../data/response/app_exception.dart';
-import '../model/profilemodel.dart';
+import '../model/profile_model.dart';
+
 
 class RegistrationRepository {
 
