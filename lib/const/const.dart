@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'globalmethod.dart';
-
-GlobalMethod globalMethod = GlobalMethod();
-
 late Size mq;
 
 List<String> travelCategories = [
+  "All",
   "History",
   "Museum",
   "Lake",

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../const/gobalcolor.dart';
-import '../view_model/controller/loading_controller.dart';
+import '../../../../res/app_colors.dart';
+import '../controller/loading_controller.dart';
 
 class CustomButtonWidget extends StatelessWidget {
   const CustomButtonWidget({super.key, required this.onPressed, required this.buttonText});

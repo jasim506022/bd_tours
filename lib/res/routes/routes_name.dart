@@ -8,7 +8,9 @@ class RoutesName {
 
   static const String homepage = "/home_Page";
   static const String tourDetailsPage = "/tour_Details_Page";
+  static const String showImageListPage = "/show_Image_List_Page";
   static const String guideDetailsPage = "/guide_Details_Page";
   static const String profilePage = "/profilePage";
   static const String editProfilePage = "/edit_Profile_Page";
+  static const String searchPage = "/search_page";
 }

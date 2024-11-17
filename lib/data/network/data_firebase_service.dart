@@ -4,11 +4,21 @@ import 'package:bd_tour_firebase/data/network/base_firebase_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../model/profile_model.dart';
+import '../../model/review_model.dart';
 
 class DataFirebaseService implements BaseFirebaseService {
+  var tourCollectionReference = FirebaseFirestore.instance.collection("tours");
+
+  CollectionReference<Map<String, dynamic>> reviewCollectionReference(
+      String id) {
+    return tourCollectionReference.doc(id).collection("review");
+  }
+
   @override
   // TODO: implement auth
   FirebaseAuth get auth => FirebaseAuth.instance;
@@ -154,6 +164,30 @@ class DataFirebaseService implements BaseFirebaseService {
         .get();
   }
 
+  Future<List<String>> uploadImageStorage(
+      {required List<XFile> imageList, required String folderName}) async {
+    List<String> imageUrlList = [];
+
+    for (var image in imageList) {
+      await postImage(image, folderName)
+          .then((downLoadUrl) => imageUrlList.add(downLoadUrl));
+    }
+    return imageUrlList;
+  }
+
+  Future<String> postImage(XFile? imageFile, String folderName) async {
+    final uniqueImageName =
+        "${imageFile!.name}_${DateTime.now().millisecondsSinceEpoch}";
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child("$folderName/Review/$uniqueImageName");
+    UploadTask uploadTax = ref.putFile(File(imageFile.path));
+    var taskSnapshot = await uploadTax.whenComplete(
+      () {},
+    );
+    return taskSnapshot.ref.getDownloadURL();
+  }
+
   @override
   Future<String> imageUploadedUrl({required String path}) async {
     final date = DateTime.now();
@@ -177,5 +211,59 @@ class DataFirebaseService implements BaseFirebaseService {
         .collection("user")
         .doc(auth.currentUser!.uid)
         .update(profileModel.toMap(isModify: true));
+  }
+
+  @override
+  Stream<QuerySnapshot<Map<String, dynamic>>> tourSnapshot(
+      {required String category}) {
+    final query = tourCollectionReference.orderBy("id", descending: true);
+
+    var filteredQuery = category == "All"
+        ? query
+        : query.where("category", isEqualTo: category);
+
+    return filteredQuery.snapshots();
+  }
+
+  @override
+  Stream<QuerySnapshot<Map<String, dynamic>>> popularTourSnapshot(
+      {required String category}) {
+    final query =
+        tourCollectionReference.where("ratting", isGreaterThanOrEqualTo: 3.5);
+    var filteredQuery = category == "All"
+        ? query
+        : query.where("category", isEqualTo: category);
+
+    return filteredQuery.snapshots();
+  }
+
+  @override
+  Stream<DocumentSnapshot<Map<String, dynamic>>> singleTourSnapshot(
+      {required String tourId}) {
+    return tourCollectionReference.doc(tourId).snapshots();
+  }
+
+  @override
+  Future<void> postReviewed(
+      {required String tourId, required ReviewModel reviewModel}) async {
+    reviewCollectionReference(tourId)
+        .doc(reviewModel.reviewId)
+        .set(reviewModel.toMap());
+  }
+
+  @override
+  Stream<QuerySnapshot<Map<String, dynamic>>> reviewSnapshot(
+      {required String tourId}) {
+    return reviewCollectionReference(tourId).snapshots();
+  }
+
+  @override
+  Future<void> updateTourSnapshot(
+      {required num rating,
+      required int totalReviews,
+      required String tourId}) async {
+    tourCollectionReference
+        .doc(tourId)
+        .update({"ratting": rating, "totalreview": totalReviews});
   }
 }

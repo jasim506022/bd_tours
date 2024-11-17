@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:bd_tour_firebase/model/review_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 import '../../model/profile_model.dart';
 
@@ -52,6 +54,12 @@ abstract class BaseFirebaseService {
 
   User? currentUser();
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> tourSnapshot(
+      {required String category});
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> popularTourSnapshot(
+      {required String category});
+
   Future<void> signOut();
 
   Future<void> uploadUserData(
@@ -60,7 +68,17 @@ abstract class BaseFirebaseService {
   Future<DocumentSnapshot<Map<String, dynamic>>>
       getCurrentUserDocumentSnapshot();
 
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> singleTourSnapshot({required String tourId});
   Future<String> imageUploadedUrl({required String path});
 
   Future<void> uploadEditProfileSnapshot({required ProfileModel profileModel});
+
+  Future<void> postReviewed(
+      {required String tourId, required ReviewModel reviewModel});
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> reviewSnapshot(
+      {required String tourId});
+
+  Future<void> updateTourSnapshot({required num rating, required int totalReviews, required String tourId});
 }

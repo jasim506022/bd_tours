@@ -1,4 +1,4 @@
-import 'package:bd_tour_firebase/const/gobalcolor.dart';
+import '../../../../res/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
